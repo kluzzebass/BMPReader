@@ -123,12 +123,17 @@ void BMPReader::printInfo(Stream &s)
 
 uint16_t BMPReader::getPixel(uint32_t &p, uint16_t x, uint16_t y)
 {
-	if (y >= h || x >= w) return 0;
+	if (y >= h || x >= w)
+		return 0;
 
-	uint16_t pos = ((rev ? y : (h - y - 1)) * rowSize) + (bpp * x) + dataOffset;
+	uint32_t pos = ((rev ? y : (h - y - 1)) * rowSize) + (bpp * x) + dataOffset;
 
-	if (!f.seek(pos)) return 0;
-	if (!f.read(&p, sizeof(p))) return 0;
+	if (!f.seek(pos))
+		return 0;
+
+	if (!f.read(&p, sizeof(p)))
+		return 0;
+
 	return 1;
 }
 
@@ -138,8 +143,11 @@ uint16_t BMPReader::getPixels(uint32_t *p, uint16_t x, uint16_t y, uint16_t num)
 
 	uint32_t pos = ((rev ? y: (h - y - 1)) * rowSize) + (bpp * x) + dataOffset;
 	uint16_t len = ((x + num) < w) ? num : w - x;
-	if (!f.seek(pos)) return 0;
-	uint16_t r = f.read(p, len * bpp) / bpp;
+
+	if (!f.seek(pos))
+		return 0;
+
+		uint16_t r = f.read(p, len * bpp) / bpp;
 
 	// If the bit depth is 32, there's no need to rearrange the bytes
 	if (dpt == 32)
